@@ -3,11 +3,11 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Logging;
 using Microsoft.Build.Logging.StructuredLogger;
 
-class BinLogReader
+class MyBinLogReader
 {
     static void Main(string[] args)
     {
-        string binLogFilePath = @"C:\temp\test.binlog";
+        string binLogFilePath = args[0];
 
         var binLogReader = new BinLogReader();
         foreach (var record in binLogReader.ReadRecords(binLogFilePath))
