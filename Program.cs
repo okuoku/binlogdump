@@ -12,7 +12,23 @@ class MyBinLogReader
 
         bool first = true;
         var binLogReader = new BinLogReader();
+
+        // Start JSONL
         Console.WriteLine("[");
+
+        // Dump Project Ids
+        var slog = BinaryLog.ReadBuild(binLogFilePath);
+        foreach(var p in slog.FindChildrenRecursive<Project>()){
+            var outproj = new { proj = p.SourceFilePath, id = p.Id };
+            if(first){
+                first = false;
+            }else{
+                Console.WriteLine(",");
+            }
+            Console.WriteLine(JsonSerializer.Serialize(outproj));
+        }
+
+        // Dump command lines
         foreach (var record in binLogReader.ReadRecords(binLogFilePath))
         {
             var buildEventArgs = record.Args;
@@ -29,6 +45,8 @@ class MyBinLogReader
                 Console.WriteLine(JsonSerializer.Serialize(buildEventArgs));
             }
         }
+
+        // End JSONL
         Console.WriteLine("]");
     }
 }
